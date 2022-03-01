@@ -32,8 +32,8 @@ func loadTeamMembers() Team {
 		log.Fatal(err)
 	}
 
-	var team = []Member{}
-	var finalTeam = Team{}
+	team := []Member{}
+	finalTeam := Team{}
 
 	_ = json.Unmarshal(content, &team)
 	for _, v := range team {
