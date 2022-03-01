@@ -1,39 +1,71 @@
 package randomizer
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"math/rand"
+	"os"
 	"time"
 )
 
-type TeamMembers struct {
+// Collection representing a team
+type Team struct {
 	Members []string
 }
 
-func loadTeamMembers() TeamMembers {
-	// TODO: Load from filesystem
-	teamMembers := TeamMembers{
-		Members: []string{"User1", "User2", "User3", "User4", "User5"},
-	}
-	return teamMembers
+// Collection representing a team member
+type Member struct {
+	Name string
 }
 
-func randomizeGuests(teamMembers *TeamMembers) {
+// Load the team members from a file on the filesystem
+func loadTeamMembers() Team {
+	currentDir, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// TODO: Make this config filename configurable from the CLI
+	content, err := os.ReadFile(currentDir + "/teamMembers.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var team = []Member{}
+	var finalTeam = Team{}
+
+	_ = json.Unmarshal(content, &team)
+	for _, v := range team {
+		finalTeam.Members = append(
+			finalTeam.Members,
+			v.Name,
+		)
+	}
+
+	return finalTeam
+}
+
+// Randomizes the team member list for the daily stand up
+func randomizeGuests(team *Team) {
 	rand.Seed(time.Now().Unix())
-	rand.Shuffle(len(teamMembers.Members), func(i, j int) {
-		teamMembers.Members[i], teamMembers.Members[j] =
-			teamMembers.Members[j], teamMembers.Members[i]
+	rand.Shuffle(len(team.Members), func(i, j int) {
+		team.Members[i], team.Members[j] =
+			team.Members[j], team.Members[i]
 	})
 }
 
-func printOrder(teamMembers *TeamMembers) {
-	for _, v := range teamMembers.Members {
+// Prints the team members in the order for the daily stand up
+func printOrder(team *Team) {
+	for _, v := range team.Members {
 		fmt.Println(v)
 	}
 }
 
+// Generates the stand up order for the team
+// Standup order gets printed to the console output
 func GenerateOrder() {
-	teamMembers := loadTeamMembers()
-	randomizeGuests(&teamMembers)
-	printOrder(&teamMembers)
+	team := loadTeamMembers()
+	randomizeGuests(&team)
+	printOrder(&team)
 }
