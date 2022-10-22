@@ -6,4 +6,4 @@ codecheck: lint
 # Requires ~ https://github.com/golangci/golangci-lint
 .PHONY: lint
 lint:
-	golangci-lint run
+	~/go/bin/golangci-lint run
