@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// TODO: Accept positional argument to get file with list of team members
+var configFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -15,7 +15,7 @@ var rootCmd = &cobra.Command{
 	Short: "Generates daily scrum team member stand up order",
 	Long:  `Generates daily scrum team member stand up order`,
 	Run: func(cmd *cobra.Command, args []string) {
-		randomizer.GenerateOrder()
+		randomizer.GenerateOrder(configFile)
 	},
 }
 
@@ -29,13 +29,6 @@ func Execute() {
 }
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.standup-randomizer.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.Flags().StringVarP(&configFile, "config", "c", "",
+		"config file (default is $HOME/.standup-randomizer.yaml)")
 }

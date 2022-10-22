@@ -20,14 +20,8 @@ type Member struct {
 }
 
 // Load the team members from a file on the filesystem
-func loadTeamMembers() Team {
-	currentDir, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// TODO: Make this config filename configurable from the CLI
-	content, err := os.ReadFile(currentDir + "/teamMembers.json")
+func loadTeamMembers(configFile string) Team {
+	content, err := os.ReadFile(configFile)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -64,8 +58,8 @@ func printOrder(team *Team) {
 
 // Generates the stand up order for the team
 // Standup order gets printed to the console output
-func GenerateOrder() {
-	team := loadTeamMembers()
+func GenerateOrder(configFile string) {
+	team := loadTeamMembers(configFile)
 	randomizeGuests(&team)
 	printOrder(&team)
 }
